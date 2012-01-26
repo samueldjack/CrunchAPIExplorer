@@ -33,7 +33,7 @@ namespace CrunchApiExplorer.Infrastructure.Services
                 throw new InvalidOperationException("Expected ViewModel name to end with 'ViewModel'");
             }
 
-            var viewTypeName = viewModelNamespace.Substring(0, viewModelTypeName.Length - "ViewModel".Length)
+            var viewTypeName = viewModelTypeName.Substring(0, viewModelTypeName.Length - "ViewModel".Length)
                 + "View";
 
             var expectedFullTypeName = viewsNamespace + "." + viewTypeName;

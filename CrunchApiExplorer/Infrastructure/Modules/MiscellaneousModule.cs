@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Autofac;
+using CrunchApiExplorer.Crunch;
 using CrunchApiExplorer.Framework.MVVM;
 
 namespace CrunchApiExplorer.Infrastructure.Modules
@@ -11,7 +12,7 @@ namespace CrunchApiExplorer.Infrastructure.Modules
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<Messenger>()
+            builder.RegisterType<CrunchFacade>()
                 .SingleInstance()
                 .AsImplementedInterfaces();
         }

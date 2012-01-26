@@ -17,7 +17,7 @@ namespace CrunchApiExplorer.Framework.Extensions
         /// <returns></returns>
         public static PropertyInfo GetPropertyInfo<T>(this Expression<Func<T>> expression)
         {
-            var memberExpression = expression as MemberExpression;
+            var memberExpression = expression.Body as MemberExpression;
             if (memberExpression == null)
             {
                 throw new InvalidOperationException("expression must consist of a property access");
