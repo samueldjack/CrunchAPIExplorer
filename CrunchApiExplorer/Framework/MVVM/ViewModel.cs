@@ -10,11 +10,18 @@ namespace CrunchApiExplorer.Framework.MVVM
 {
     public abstract class ViewModel : INotifyPropertyChanged, IViewModel
     {
+        private CommandHolder _commandHolder;
+
         public event PropertyChangedEventHandler PropertyChanged;
+        
+        protected CommandHolder Commands
+        {
+            get { return _commandHolder ?? (_commandHolder = new CommandHolder()); }
+        }
 
         protected void RaisePropertyChanged<T>(Expression<Func<T>> propertyExpression)
         {
-            RaisePropertyChanged(new PropertyChangedEventArgs(SymbolExtensions.GetPropertyName(propertyExpression)));
+            RaisePropertyChanged(new PropertyChangedEventArgs(propertyExpression.GetPropertyName()));
         }
 
         protected void RaisePropertyChanged(PropertyChangedEventArgs e)

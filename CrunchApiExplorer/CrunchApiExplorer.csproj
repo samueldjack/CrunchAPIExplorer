@@ -77,6 +77,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Framework\MVVM\ActionCommand.cs" />
+    <Compile Include="Framework\MVVM\CommandBase.cs" />
+    <Compile Include="Framework\MVVM\CommandHolder.cs" />
+    <Compile Include="Infrastructure\Modules\MiscellaneousModule.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Page Include="Infrastructure\Controls\DialogWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -88,10 +97,20 @@
     <Compile Include="Framework\AutofacExtensions\ContainerBuilderExtensions.cs" />
     <Compile Include="Framework\Behaviors\NotifyViewModelOfLifeCycleEvents.cs" />
     <Compile Include="Framework\Extensions\SymbolExtensions.cs" />
+    <Compile Include="Framework\MVVM\DialogViewModel.cs" />
     <Compile Include="Framework\MVVM\IMessenger.cs" />
     <Compile Include="Framework\MVVM\IViewModel.cs" />
     <Compile Include="Framework\MVVM\Messenger.cs" />
     <Compile Include="Framework\MVVM\ViewModel.cs" />
+    <Compile Include="Infrastructure\Controls\DialogWindow.xaml.cs">
+      <DependentUpon>DialogWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Infrastructure\Modules\ServicesModule.cs" />
+    <Compile Include="Infrastructure\Modules\ViewModelsModule.cs" />
+    <Compile Include="Infrastructure\Services\DialogService.cs" />
+    <Compile Include="Infrastructure\Services\IDialogService.cs" />
+    <Compile Include="Infrastructure\Services\IViewLocator.cs" />
+    <Compile Include="Infrastructure\Services\ViewLocator.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -123,7 +142,7 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Infrastructure\Modules\" />
+    <Folder Include="Views\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

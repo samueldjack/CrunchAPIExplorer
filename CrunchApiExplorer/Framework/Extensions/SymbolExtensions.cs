@@ -15,7 +15,7 @@ namespace CrunchApiExplorer.Framework.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public static PropertyInfo GetPropertyInfo<T>(Expression<Func<T>> expression)
+        public static PropertyInfo GetPropertyInfo<T>(this Expression<Func<T>> expression)
         {
             var memberExpression = expression as MemberExpression;
             if (memberExpression == null)
@@ -32,7 +32,7 @@ namespace CrunchApiExplorer.Framework.Extensions
             return propertyInfo;
         }
 
-        public static string GetPropertyName<T>(Expression<Func<T>> expression)
+        public static string GetPropertyName<T>(this Expression<Func<T>> expression)
         {
             return GetPropertyInfo(expression).Name;
         }
