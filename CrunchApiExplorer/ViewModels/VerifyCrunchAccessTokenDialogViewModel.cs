@@ -12,6 +12,7 @@ namespace CrunchApiExplorer.ViewModels
 
         public VerifyCrunchAccessTokenDialogViewModel()
         {
+            Title = "Verify with Crunch";
         }
 
         public Uri AuthorisationUrl { get; set; }

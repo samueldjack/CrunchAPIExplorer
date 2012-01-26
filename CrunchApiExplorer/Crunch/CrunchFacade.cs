@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Linq;
 using CrunchApiExplorer.Properties;
 using DotNetOpenAuth.Messaging;
 using DotNetOpenAuth.OAuth;
@@ -20,17 +23,12 @@ namespace CrunchApiExplorer.Crunch
             _requestTokenVerifier = requestTokenVerifier;
         }
 
-        public Task ChangeConnection(CrunchAuthorisationParameters crunchAuthorisationParameters)
+        public Task ChangeConnectionAsync(CrunchAuthorisationParameters crunchAuthorisationParameters)
         {
             return Task.Factory.StartNew(
                 () =>
                     {
-                        var tokenManager = new InMemoryTokenManager(crunchAuthorisationParameters.ConsumerKey,
-                                                                    crunchAuthorisationParameters.SharedSecret);
-
-                        var serviceProviderDescription = CreateServiceProviderDescription(crunchAuthorisationParameters);
-
-                        var consumer = new DesktopConsumer(serviceProviderDescription, tokenManager);
+                        var consumer = CreateConsumer(crunchAuthorisationParameters);
 
                         string requestToken;
                         var userAuthorisationUri = consumer.RequestUserAuthorization(new Dictionary<string, string>(),
@@ -48,6 +46,17 @@ namespace CrunchApiExplorer.Crunch
                     });
         }
 
+        private static DesktopConsumer CreateConsumer(CrunchAuthorisationParameters crunchAuthorisationParameters)
+        {
+            var tokenManager = new InMemoryTokenManager(crunchAuthorisationParameters.ConsumerKey,
+                                                        crunchAuthorisationParameters.SharedSecret);
+
+            var serviceProviderDescription = CreateServiceProviderDescription(crunchAuthorisationParameters);
+
+            var consumer = new DesktopConsumer(serviceProviderDescription, tokenManager);
+            return consumer;
+        }
+
         public CrunchAuthorisationParameters GetCurrentAuthorisationParameters()
         {
             var crunchAuthorisationParameters = new CrunchAuthorisationParameters(
@@ -59,6 +68,51 @@ namespace CrunchApiExplorer.Crunch
                 );
 
             return crunchAuthorisationParameters;
+        }
+
+        public bool IsConnected
+        {
+            get { return !Settings.Default.AccessToken.IsNullOrWhiteSpace(); }
+        }
+
+        public Task<XElement> MakeRequestAsync(string requestUrl)
+        {
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("You must connect to crunch first");
+            }
+
+            var cap = GetCurrentAuthorisationParameters();
+            var consumer = CreateConsumer(cap);
+            SetAccessToken(consumer);
+
+            var request = consumer.PrepareAuthorizedRequest(
+                new MessageReceivingEndpoint(requestUrl,
+                                             HttpDeliveryMethods.GetRequest |
+                                             HttpDeliveryMethods.AuthorizationHeaderRequest),
+                Settings.Default.AccessToken.DecryptBase64EncodedString());
+
+            var task = Task.Factory.FromAsync<WebResponse>(request.BeginGetResponse, request.EndGetResponse, null)
+                .ContinueWith(t =>
+                                  {
+                                      using (var stream = t.Result.GetResponseStream())
+                                      {
+                                          var xmlReader = XmlReader.Create(stream);
+                                          xmlReader.MoveToContent();
+
+                                          var document = (XElement)XNode.ReadFrom(xmlReader);
+                                          return document;
+                                      }
+                                  });
+
+            return task;
+        }
+
+        private void SetAccessToken(DesktopConsumer consumer)
+        {
+            ((InMemoryTokenManager)consumer.TokenManager).AddAccessTokenAndSecret(
+                Settings.Default.AccessToken.DecryptBase64EncodedString(), 
+                Settings.Default.SharedSecret.DecryptBase64EncodedString());
         }
 
         private static ServiceProviderDescription CreateServiceProviderDescription(CrunchAuthorisationParameters crunchAuthorisationParameters)

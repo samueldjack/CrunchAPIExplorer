@@ -5,10 +5,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:ViewModels="clr-namespace:CrunchApiExplorer.ViewModels" mc:Ignorable="d" d:DataContext="{d:DesignInstance ViewModels:MainWindowViewModel}">
-    <Grid>
+    <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        
         <Button Content="Connect" Command="{Binding ConnectCommand}"/>
+        
+        <Grid Grid.Row="1" IsEnabled="{Binding IsBusy, Converter={StaticResource Converter_Negating}}" Margin="0,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBox Text="{Binding RequestUrl, Mode=TwoWay}" Grid.Column="0"/>
+            <Button Content="Go!" Command="{Binding MakeRequestCommand}" Grid.Column="1"/>
+        </Grid>
+
+        <ProgressBar Visibility="{Binding IsBusy, Converter={StaticResource Converter_BooleanToVisibility}}" 
+                     IsIndeterminate="True"
+                     Grid.Row="2" 
+                     Margin="2,5" Height="20"/>
+        
+        <TextBox Text="{Binding Response}" Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"/>
     </Grid>
 </Window>

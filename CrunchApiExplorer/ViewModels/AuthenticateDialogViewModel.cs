@@ -103,7 +103,7 @@ namespace CrunchApiExplorer.ViewModels
         {
             IsBusy = true;
 
-            var task = _crunchFacade.ChangeConnection(new CrunchAuthorisationParameters(ConsumerKey, SharedSecret, RequestTokenEndpoint, AccessTokenEndpoint, UserAuthorizationEndpoint));
+            var task = _crunchFacade.ChangeConnectionAsync(new CrunchAuthorisationParameters(ConsumerKey, SharedSecret, RequestTokenEndpoint, AccessTokenEndpoint, UserAuthorizationEndpoint));
 
             task.ContinueWith(HandleChangeConnectionCompleted, TaskScheduler.FromCurrentSynchronizationContext());
         }

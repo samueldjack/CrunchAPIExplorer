@@ -1,10 +1,12 @@
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace CrunchApiExplorer.Crunch
 {
     public interface ICrunchFacade
     {
-        Task ChangeConnection(CrunchAuthorisationParameters crunchAuthorisationParameters);
+        Task ChangeConnectionAsync(CrunchAuthorisationParameters crunchAuthorisationParameters);
         CrunchAuthorisationParameters GetCurrentAuthorisationParameters();
+        Task<XElement> MakeRequestAsync(string requestUrl);
     }
 }
