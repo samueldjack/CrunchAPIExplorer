@@ -15,6 +15,10 @@ namespace CrunchApiExplorer.Infrastructure.Modules
             builder.RegisterType<CrunchFacade>()
                 .SingleInstance()
                 .AsImplementedInterfaces();
+
+            builder.RegisterType<DesktopRequestTokenVerifier>()
+               .SingleInstance()
+               .AsImplementedInterfaces();
         }
     }
 }

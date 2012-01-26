@@ -11,7 +11,8 @@
     <RootNamespace>CrunchApiExplorer</RootNamespace>
     <AssemblyName>CrunchApiExplorer</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -43,6 +44,9 @@
     </Reference>
     <Reference Include="Autofac.Configuration">
       <HintPath>..\packages\Autofac.2.5.2.830\lib\NET40\Autofac.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetOpenAuth">
+      <HintPath>..\packages\DotNetOpenAuth.3.4.7.11121\lib\DotNetOpenAuth.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -78,17 +82,28 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Crunch\CrunchAuthorisationParameters.cs" />
     <Compile Include="Crunch\CrunchFacade.cs" />
+    <Compile Include="Crunch\DesktopRequestTokenVerifier.cs" />
     <Compile Include="Crunch\ICrunchFacade.cs" />
+    <Compile Include="Crunch\InMemoryTokenManager.cs" />
+    <Compile Include="Crunch\IVerifyUserRequestToken.cs" />
+    <Compile Include="Framework\Extensions\DoubleExtensions.cs" />
     <Compile Include="Framework\Extensions\StringExtensions.cs" />
     <Compile Include="Framework\MVVM\ActionCommand.cs" />
     <Compile Include="Framework\MVVM\CommandBase.cs" />
     <Compile Include="Framework\MVVM\CommandHolder.cs" />
+    <Compile Include="Framework\MVVM\Converters\NegatingConverter.cs" />
     <Compile Include="Infrastructure\Modules\MiscellaneousModule.cs" />
+    <Compile Include="Infrastructure\Schedulers.cs" />
     <Compile Include="ViewModels\AuthenticateDialogViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\VerifyCrunchAccessTokenDialogViewModel.cs" />
     <Compile Include="Views\AuthenticateDialogView.xaml.cs">
       <DependentUpon>AuthenticateDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\VerifyCrunchAccessTokenDialogView.xaml.cs">
+      <DependentUpon>VerifyCrunchAccessTokenDialogView.xaml</DependentUpon>
     </Compile>
     <Page Include="Infrastructure\Controls\DialogWindow.xaml">
       <SubType>Designer</SubType>
@@ -123,7 +138,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Resources\Converters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\AuthenticateDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\VerifyCrunchAccessTokenDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

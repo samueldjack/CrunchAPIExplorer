@@ -19,6 +19,7 @@ namespace CrunchApiExplorer.ViewModels
         private string _requestTokenEndpoint;
         private string _accessTokenEndpoint;
         private string _userAuthorizationEndpoint;
+        private bool _isBusy;
 
         public AuthenticateDialogViewModel(ICrunchFacade crunchFacade, IDialogService dialogService)
         {
@@ -76,6 +77,16 @@ namespace CrunchApiExplorer.ViewModels
                 _userAuthorizationEndpoint = value;
                 RaisePropertyChanged(() => UserAuthorizationEndpoint);
             }
+        }
+
+        public bool IsBusy
+        {
+            get { return _isBusy; }
+            private set
+            {
+                _isBusy = value;
+                RaisePropertyChanged(() => IsBusy);
+            }
         } 
 
         public ICommand AuthenticateCommand
@@ -90,14 +101,17 @@ namespace CrunchApiExplorer.ViewModels
 
         private void HandleAuthenticate()
         {
-            var task = _crunchFacade.ChangeConnection(ConsumerKey, SharedSecret, RequestTokenEndpoint,
-                                                      AccessTokenEndpoint, UserAuthorizationEndpoint);
+            IsBusy = true;
+
+            var task = _crunchFacade.ChangeConnection(new CrunchAuthorisationParameters(ConsumerKey, SharedSecret, RequestTokenEndpoint, AccessTokenEndpoint, UserAuthorizationEndpoint));
 
             task.ContinueWith(HandleChangeConnectionCompleted, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private void HandleChangeConnectionCompleted(Task task)
         {
+            IsBusy = false;
+
             if (task.IsFaulted)
             {
                 _dialogService.ShowErrorMessage(task.Exception.InnerException.Message);
@@ -106,6 +120,17 @@ namespace CrunchApiExplorer.ViewModels
             {
                 Close(true);
             }
+        }
+
+        protected override void OnViewLoaded()
+        {
+            var cap = _crunchFacade.GetCurrentAuthorisationParameters();
+
+            ConsumerKey = cap.ConsumerKey;
+            SharedSecret = cap.SharedSecret;
+            UserAuthorizationEndpoint = cap.UserAuthorizationEndpoint;
+            RequestTokenEndpoint = cap.RequestTokenEndpoint;
+            AccessTokenEndpoint = cap.AccessTokenEndpoint;
         }
     }
 }

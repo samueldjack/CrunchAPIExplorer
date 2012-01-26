@@ -4,6 +4,7 @@ namespace CrunchApiExplorer.Crunch
 {
     public interface ICrunchFacade
     {
-        Task ChangeConnection(string consumerKey, string sharedSecret, string requestTokenEndpoint, string accessTokenEndpoint, string userAuthorizationEndpoint);
+        Task ChangeConnection(CrunchAuthorisationParameters crunchAuthorisationParameters);
+        CrunchAuthorisationParameters GetCurrentAuthorisationParameters();
     }
 }

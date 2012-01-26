@@ -29,6 +29,7 @@ namespace CrunchApiExplorer.Infrastructure.Services
                                  Content = view,
                                  WindowStartupLocation = WindowStartupLocation.CenterOwner,
                              };
+
             window.SetBinding(Window.TitleProperty, new Binding("Title") {Source = viewModel});
 
             viewModel.Closed += delegate

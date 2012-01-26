@@ -29,5 +29,10 @@ namespace CrunchApiExplorer.Framework.Extensions
             byte[] decrypted = ProtectedData.Unprotect(data, null, DataProtectionScope.CurrentUser);
             return Encoding.Unicode.GetString(decrypted);
         }
+
+        public static bool IsNullOrWhiteSpace(this string value)
+        {
+            return string.IsNullOrWhiteSpace(value);
+        }
     }
 }

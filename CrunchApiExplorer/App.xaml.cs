@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Windows;
 using Autofac;
 using CrunchApiExplorer.Framework.AutofacExtensions;
+using CrunchApiExplorer.Infrastructure;
 using CrunchApiExplorer.ViewModels;
 
 namespace CrunchApiExplorer
@@ -19,6 +20,8 @@ namespace CrunchApiExplorer
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            Schedulers.Initialise();
 
             var container = new ContainerBuilder()
                 .AddModulesFromAssembly(Assembly.GetExecutingAssembly())
