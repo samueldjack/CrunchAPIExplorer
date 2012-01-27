@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CrunchApiExplorer.Crunch;
+using CrunchApiExplorer.Framework.DataValidation;
 using CrunchApiExplorer.Framework.MVVM;
 using CrunchApiExplorer.Infrastructure.Services;
 
 namespace CrunchApiExplorer.ViewModels
 {
-    class AuthenticateDialogViewModel : DialogViewModel
+    class AuthenticateDialogViewModel : DialogViewModel, IDataErrorInfo
     {
         private readonly ICrunchFacade _crunchFacade;
         private readonly IDialogService _dialogService;
@@ -20,6 +23,7 @@ namespace CrunchApiExplorer.ViewModels
         private string _accessTokenEndpoint;
         private string _userAuthorizationEndpoint;
         private bool _isBusy;
+        ErrorHolder _errorHolder = new ErrorHolder();
 
         public AuthenticateDialogViewModel(ICrunchFacade crunchFacade, IDialogService dialogService)
         {
@@ -29,6 +33,7 @@ namespace CrunchApiExplorer.ViewModels
             Title = "Connect to Crunch";
         }
 
+        [Required]
         public string ConsumerKey
         {
             get { return _consumerKey; }
@@ -39,6 +44,7 @@ namespace CrunchApiExplorer.ViewModels
             }
         }
 
+        [Required]
         public string SharedSecret
         {
             get { return _sharedSecret; }
@@ -49,6 +55,8 @@ namespace CrunchApiExplorer.ViewModels
             }
         }
 
+        [Required]
+        [Url(Absolute = true)]
         public string RequestTokenEndpoint
         {
             get { return _requestTokenEndpoint; }
@@ -59,6 +67,8 @@ namespace CrunchApiExplorer.ViewModels
             }
         }
 
+        [Required]
+        [Url(Absolute = true)]
         public string AccessTokenEndpoint
         {
             get { return _accessTokenEndpoint; }
@@ -69,6 +79,8 @@ namespace CrunchApiExplorer.ViewModels
             }
         }
 
+        [Required]
+        [Url(Absolute = true)]
         public string UserAuthorizationEndpoint
         {
             get { return _userAuthorizationEndpoint; }
@@ -101,6 +113,12 @@ namespace CrunchApiExplorer.ViewModels
 
         private void HandleAuthenticate()
         {
+            if (!_errorHolder.Validate(this))
+            {
+                RaiseAllPropertiesChanged();
+                return;
+            }
+
             IsBusy = true;
 
             var task = _crunchFacade.ChangeConnectionAsync(new CrunchAuthorisationParameters(ConsumerKey, SharedSecret, RequestTokenEndpoint, AccessTokenEndpoint, UserAuthorizationEndpoint));
@@ -131,6 +149,16 @@ namespace CrunchApiExplorer.ViewModels
             UserAuthorizationEndpoint = cap.UserAuthorizationEndpoint;
             RequestTokenEndpoint = cap.RequestTokenEndpoint;
             AccessTokenEndpoint = cap.AccessTokenEndpoint;
+        }
+
+        public string this[string columnName]
+        {
+            get { return _errorHolder.GetError(columnName); }
+        }
+
+        public string Error
+        {
+            get { return string.Empty; }
         }
     }
 }

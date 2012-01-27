@@ -19,6 +19,11 @@ namespace CrunchApiExplorer.Framework.MVVM
             get { return _commandHolder ?? (_commandHolder = new CommandHolder()); }
         }
 
+        protected void RaiseAllPropertiesChanged()
+        {
+            RaisePropertyChanged(new PropertyChangedEventArgs(string.Empty));
+        }
+
         protected void RaisePropertyChanged<T>(Expression<Func<T>> propertyExpression)
         {
             RaisePropertyChanged(new PropertyChangedEventArgs(propertyExpression.GetPropertyName()));

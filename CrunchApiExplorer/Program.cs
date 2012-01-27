@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using log4net.Core;
 
 namespace CrunchApiExplorer
 {
@@ -14,7 +15,16 @@ namespace CrunchApiExplorer
         public static void Main()
         {
             AppDomain.CurrentDomain.AssemblyResolve += OnResolveAssembly;
+
+            DotNetOAuthEmbeddingWorkaround();
+
             App.Main();
+        }
+
+        private static void DotNetOAuthEmbeddingWorkaround()
+        {
+            // reference a log4Net type to force the assembly to be loaded
+            var level = new Level(1, "Test");
         }
 
         private static Assembly OnResolveAssembly(object sender, ResolveEventArgs args)

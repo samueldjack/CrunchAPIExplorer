@@ -17,7 +17,7 @@
                 <Setter Property="Margin" Value="2"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
             </Style>
-            <Style TargetType="TextBox">
+            <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
                 <Setter Property="Margin" Value="2"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
             </Style>
@@ -37,19 +37,19 @@
         </Grid.ColumnDefinitions>
         
         <Label Content="Consumer Key" Grid.Row="0" Grid.Column="0"/>
-        <TextBox Text="{Binding ConsumerKey, Mode=TwoWay}" Grid.Row="0" Grid.Column="1"/>
+        <TextBox Text="{Binding ConsumerKey, Mode=TwoWay, ValidatesOnDataErrors=True}" Grid.Row="0" Grid.Column="1"/>
 
         <Label Content="Shared Secret" Grid.Row="1" Grid.Column="0"/>
-        <TextBox Text="{Binding SharedSecret, Mode=TwoWay}" Grid.Row="1" Grid.Column="1"/>
+        <TextBox Text="{Binding SharedSecret, Mode=TwoWay, ValidatesOnDataErrors=True}" Grid.Row="1" Grid.Column="1"/>
 
         <Label Content="User Authorisation Endpoint" Grid.Row="2" Grid.Column="0"/>
-        <TextBox Text="{Binding UserAuthorizationEndpoint, Mode=TwoWay}" Grid.Row="2" Grid.Column="1"/>
+        <TextBox Text="{Binding UserAuthorizationEndpoint, Mode=TwoWay, ValidatesOnDataErrors=True}" Grid.Row="2" Grid.Column="1"/>
 
         <Label Content="Access Token Endpoint" Grid.Row="3" Grid.Column="0"/>
-        <TextBox Text="{Binding AccessTokenEndpoint, Mode=TwoWay}" Grid.Row="3" Grid.Column="1"/>
+        <TextBox Text="{Binding AccessTokenEndpoint, Mode=TwoWay, ValidatesOnDataErrors=True}" Grid.Row="3" Grid.Column="1"/>
 
         <Label Content="Request Token Endpoint" Grid.Row="4" Grid.Column="0"/>
-        <TextBox Text="{Binding RequestTokenEndpoint, Mode=TwoWay}" Grid.Row="4" Grid.Column="1"/>
+        <TextBox Text="{Binding RequestTokenEndpoint, Mode=TwoWay, ValidatesOnDataErrors=True}" Grid.Row="4" Grid.Column="1"/>
 
         <StackPanel Margin="0,5" Grid.Row="5" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Content="Cancel" Command="{Binding CancelCommand}"
