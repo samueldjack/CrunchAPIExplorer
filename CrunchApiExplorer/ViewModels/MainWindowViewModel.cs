@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Xml;
 using System.Xml.Linq;
 using CrunchApiExplorer.Controls;
 using CrunchApiExplorer.Crunch;
@@ -71,13 +72,13 @@ namespace CrunchApiExplorer.ViewModels
 
         private void HandleMakeRequest()
         {
-            var requestUri = new Uri(RequestUrl, UriKind.Relative);
-
-            XDocument requestDocument = null;
-            if (SelectedHttpMethod == HttpMethod.Post)
+            var requestUri = GetRequestUri();
+            if (requestUri == null)
             {
-                requestDocument = _request.Value;
+                return;
             }
+
+            var requestDocument = GetRequestDocument();
 
             if (!EnsureUserHasConfirmedUpdateToLiveServer())
             {
@@ -89,6 +90,38 @@ namespace CrunchApiExplorer.ViewModels
 
             _crunchFacade.MakeRequestAsync(requestUri, SelectedHttpMethod, requestDocument)
                 .ContinueWith(HandleRequestComplete);
+        }
+
+        private Uri GetRequestUri()
+        {
+            Uri uri;
+
+            if (RequestUrl.IsNullOrWhiteSpace() || !Uri.TryCreate(RequestUrl, UriKind.Relative, out uri))
+            {
+                _dialogService.ShowErrorMessage("Please enter a URI relative to the Crunch server address.");
+                return null;
+            }
+
+            return uri;
+        }
+
+        private XDocument GetRequestDocument()
+        {
+            if (SelectedHttpMethod == HttpMethod.Post)
+            {
+                try
+                {
+                    var requestDocument = _request.Value;
+                    return requestDocument;
+                }
+                catch (XmlException ex)
+                {
+                    _dialogService.ShowErrorMessage("The xml you have entered contains an error:" + ex.Message);
+                    return null;
+                }
+            }
+
+            return null;
         }
 
         private bool EnsureUserHasConfirmedUpdateToLiveServer()
