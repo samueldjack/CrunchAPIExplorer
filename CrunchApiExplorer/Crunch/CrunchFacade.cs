@@ -84,33 +84,37 @@ namespace CrunchApiExplorer.Crunch
                 throw new InvalidOperationException("You must connect to crunch first");
             }
 
-            var cap = GetCurrentAuthorisationParameters();
-            var consumer = CreateConsumer(cap);
-            SetAccessToken(consumer);
+            var task = Task.Factory.StartNew(
+                () =>
+                    {
+                        var cap = GetCurrentAuthorisationParameters();
+                        var consumer = CreateConsumer(cap);
+                        SetAccessToken(consumer);
 
-            var request = consumer.PrepareAuthorizedRequest(
-                new MessageReceivingEndpoint(requestUrl,
-                                             TranslateHttpMethod(httpMethod)),
-                Settings.Default.AccessToken.DecryptBase64EncodedString());
+                        var request = consumer.PrepareAuthorizedRequest(
+                            new MessageReceivingEndpoint(requestUrl,
+                                                         TranslateHttpMethod(httpMethod)),
+                            Settings.Default.AccessToken.DecryptBase64EncodedString());
 
 
-            if (httpMethod == HttpMethod.Post && requestBody != null)
-            {
-                request.SetRequestBody(requestBody.ToString(SaveOptions.DisableFormatting), "application/xml");
-            }
+                        if (httpMethod == HttpMethod.Post && requestBody != null)
+                        {
+                            request.SetRequestBody(
+                                requestBody.ToString(SaveOptions.DisableFormatting),
+                                "application/xml");
+                        }
 
-            var task = Task.Factory.FromAsync<WebResponse>(request.BeginGetResponse, request.EndGetResponse, null)
-                .ContinueWith(t =>
-                                  {
-                                      using (var stream = t.Result.GetResponseStream())
-                                      {
-                                          var xmlReader = XmlReader.Create(stream);
-                                          xmlReader.MoveToContent();
+                        var response = request.GetResponse();
+                        using (var stream = response.GetResponseStream())
+                        {
+                            var xmlReader = XmlReader.Create(stream);
+                            xmlReader.MoveToContent();
 
-                                          var document = (XElement)XNode.ReadFrom(xmlReader);
-                                          return document;
-                                      }
-                                  });
+                            var document = (XElement) XNode.ReadFrom(xmlReader);
+                            return document;
+                        }
+
+                    });
 
             return task;
         }
