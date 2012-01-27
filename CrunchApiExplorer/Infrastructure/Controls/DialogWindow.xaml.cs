@@ -30,6 +30,22 @@ namespace CrunchApiExplorer.Infrastructure.Controls
         public static readonly DependencyProperty InitialHeightProperty =
             DependencyProperty.RegisterAttached("InitialHeight", typeof(double), typeof(DialogWindow), new UIPropertyMetadata(double.NaN));
 
+
+
+        public static bool GetIsResizable(DependencyObject obj)
+        {
+            return (bool)obj.GetValue(IsResizableProperty);
+        }
+
+        public static void SetIsResizable(DependencyObject obj, bool value)
+        {
+            obj.SetValue(IsResizableProperty, value);
+        }
+
+        public static readonly DependencyProperty IsResizableProperty =
+            DependencyProperty.RegisterAttached("IsResizable", typeof(bool), typeof(DialogWindow), new UIPropertyMetadata(true));
+
+
         public static double GetInitialHeight(DependencyObject obj)
         {
             return (double)obj.GetValue(InitialHeightProperty);
@@ -86,6 +102,8 @@ namespace CrunchApiExplorer.Infrastructure.Controls
                 Width = initialWidth;
                 Height = initialHeight;
             }
+
+            ResizeMode = GetIsResizable(frameworkElement) ? ResizeMode.CanResize : ResizeMode.NoResize;
         }
     }
 }

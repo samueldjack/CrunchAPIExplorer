@@ -7,7 +7,8 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:Behaviors="clr-namespace:CrunchApiExplorer.Framework.Behaviors"
              xmlns:Controls="clr-namespace:CrunchApiExplorer.Infrastructure.Controls" mc:Ignorable="d" 
-             d:DesignHeight="214" d:DesignWidth="568" Controls:DialogWindow.InitialWidth="543" d:DataContext="{d:DesignInstance ViewModels:AuthenticateDialogViewModel}">
+             d:DesignHeight="214" d:DesignWidth="568" Controls:DialogWindow.InitialWidth="543" d:DataContext="{d:DesignInstance ViewModels:AuthenticateDialogViewModel}"
+             Controls:DialogWindow.IsResizable="False">
     <i:Interaction.Behaviors>
         <Behaviors:NotifyViewModelOfLifeCycleEvents/>
     </i:Interaction.Behaviors>
@@ -57,8 +58,10 @@
 
 			<StackPanel Margin="0,5,10,5" Grid.Row="5" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
 				<Button Content="Cancel" Command="{Binding CancelCommand}"
+                        IsCancel="true"
 					Margin="5,0"/>
 				<Button Content="Connect" Command="{Binding AuthenticateCommand}"
+                        IsDefault="true"
 					Margin="5,0,0,0"/>
 			</StackPanel>
 
