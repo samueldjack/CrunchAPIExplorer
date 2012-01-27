@@ -15,8 +15,10 @@ using System.Windows.Shapes;
 using System.Xml;
 using System.Xml.Linq;
 using ICSharpCode.AvalonEdit.Document;
+using ICSharpCode.AvalonEdit.Folding;
 using Microsoft.Expression.Interactivity.Core;
 using CrunchApiExplorer.Framework.Extensions;
+using ICSharpCode.AvalonEdit;
 
 namespace CrunchApiExplorer.Controls
 {
@@ -56,7 +58,11 @@ namespace CrunchApiExplorer.Controls
             Observable.FromEventPattern(h => TextDocument.TextChanged += h, h => TextDocument.TextChanged -= h)
                 .Throttle(TimeSpan.FromSeconds(0.25))
                 .ObserveOnDispatcher()
-                .Subscribe(_ => RecheckDocument());
+                .Subscribe(_ =>
+                               {
+                                   RecheckDocument();
+                                   UpdateFolding();
+                               });
 
             TextDocument.TextChanged += delegate
                                             {
@@ -121,9 +127,20 @@ namespace CrunchApiExplorer.Controls
                 if (document != null)
                 {
                     TextDocument.Text = document.ToString();
+                    UpdateFolding();
                 }
             }
            
+        }
+
+        private void UpdateFolding()
+        {
+            if (_foldingStrategy == null)
+            {
+                return;
+            }
+
+            _foldingStrategy.UpdateFoldings(_folderManager, _textEditor.Document);
         }
 
         private XDocument GetDocument()
@@ -142,6 +159,9 @@ namespace CrunchApiExplorer.Controls
             DependencyProperty.RegisterReadOnly("TextDocument", typeof (TextDocument), typeof (XmlEditor), new UIPropertyMetadata(default(TextDocument)));
 
         private bool _localDocumentUpdate;
+        private TextEditor _textEditor;
+        private FoldingManager _folderManager;
+        private XmlFoldingStrategy _foldingStrategy;
 
         public Lazy<XDocument> Document
         {
@@ -159,7 +179,18 @@ namespace CrunchApiExplorer.Controls
         {
             base.OnApplyTemplate();
 
+            _textEditor = (TextEditor)Template.FindName("PART_TextEditor", this);
+            if (_textEditor != null)
+            {
+                InitializeFolding();
+            }
             UpdateStates(false);
+        }
+
+        private void InitializeFolding()
+        {
+            _folderManager = FoldingManager.Install(_textEditor.TextArea);
+            _foldingStrategy = new XmlFoldingStrategy();
         }
     }
 }

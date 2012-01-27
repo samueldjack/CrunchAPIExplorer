@@ -37,7 +37,7 @@
                                     <TextBlock Text="{Binding DocumentError, RelativeSource={RelativeSource TemplatedParent}}" Foreground="White"
                                            VerticalAlignment="Center" TextWrapping="Wrap" Margin="5"/>
                                 </Border>
-                                <avalonedit:TextEditor Document="{Binding TextDocument, RelativeSource={RelativeSource TemplatedParent}}"
+                                <avalonedit:TextEditor x:Name="PART_TextEditor"  Document="{Binding TextDocument, RelativeSource={RelativeSource TemplatedParent}}"
                                                    SyntaxHighlighting="XML" IsReadOnly="{TemplateBinding IsReadOnly}"/>
                             </DockPanel>
                         </Border>
