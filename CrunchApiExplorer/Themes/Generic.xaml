@@ -38,7 +38,7 @@
                                            VerticalAlignment="Center" TextWrapping="Wrap" Margin="5"/>
                                 </Border>
                                 <avalonedit:TextEditor Document="{Binding TextDocument, RelativeSource={RelativeSource TemplatedParent}}"
-                                                   SyntaxHighlighting="XML"/>
+                                                   SyntaxHighlighting="XML" IsReadOnly="{TemplateBinding IsReadOnly}"/>
                             </DockPanel>
                         </Border>
                     </Grid>

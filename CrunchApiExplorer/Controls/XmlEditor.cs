@@ -27,6 +27,15 @@ namespace CrunchApiExplorer.Controls
             DefaultStyleKeyProperty.OverrideMetadata(typeof(XmlEditor), new FrameworkPropertyMetadata(typeof(XmlEditor)));
         }
 
+        public bool IsReadOnly
+        {
+            get { return (bool)GetValue(IsReadOnlyProperty); }
+            set { SetValue(IsReadOnlyProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsReadOnlyProperty =
+            DependencyProperty.Register("IsReadOnly", typeof(bool), typeof(XmlEditor), new UIPropertyMetadata(false));
+
         public static readonly DependencyProperty DocumentProperty =
             DependencyProperty.Register("Document", typeof (Lazy<XDocument>), typeof (XmlEditor), new UIPropertyMetadata(default(Lazy<XDocument>), HandleDocumentChanged));
 
@@ -101,11 +110,20 @@ namespace CrunchApiExplorer.Controls
                 return;
             }
 
-            var document = (e.NewValue as Lazy<XDocument>).Value;
-            if (document != null)
+            var lazyDocument = e.NewValue as Lazy<XDocument>;
+            if (lazyDocument == null)
             {
-                TextDocument.Text = document.ToString();
+                TextDocument.Text = "";
             }
+            else
+            {
+                var document = lazyDocument.Value;
+                if (document != null)
+                {
+                    TextDocument.Text = document.ToString();
+                }
+            }
+           
         }
 
         private XDocument GetDocument()

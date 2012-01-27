@@ -25,11 +25,12 @@ namespace CrunchApiExplorer.ViewModels
         private readonly Func<AuthenticateDialogViewModel> _authenticateViewModelFactory;
         private readonly ICrunchFacade _crunchFacade;
         private string _requestUrl;
-        private string _response;
+        private string _responseError;
         private bool _isBusy;
         private HttpMethod _selectedHttpMethod;
         private Lazy<XDocument> _request;
         private string _connectedServer;
+        private Lazy<XDocument> _responseDocument;
 
         public MainWindowViewModel(IDialogService dialogService, Func<AuthenticateDialogViewModel> authenticateViewModelFactory, ICrunchFacade crunchFacade)
         {
@@ -72,6 +73,9 @@ namespace CrunchApiExplorer.ViewModels
 
         private void HandleMakeRequest()
         {
+            ResponseError = string.Empty;
+            ResponseDocument = null;
+
             var requestUri = GetRequestUri();
             if (requestUri == null)
             {
@@ -98,7 +102,6 @@ namespace CrunchApiExplorer.ViewModels
             }
 
             IsBusy = true;
-            Response = string.Empty;
 
             _crunchFacade.MakeRequestAsync(requestUri, SelectedHttpMethod, requestDocument)
                 .ContinueWith(HandleRequestComplete);
@@ -134,11 +137,12 @@ namespace CrunchApiExplorer.ViewModels
 
             if (task.IsFaulted)
             {
-                Response = task.Exception.InnerException.ToString();
+                ResponseError = task.Exception.InnerException.ToString();
             }
             else
             {
-                Response = task.Result.ToString();
+                var document = new XDocument(task.Result);
+                ResponseDocument = new Lazy<XDocument>(() => document);
             }
         }
 
@@ -174,17 +178,26 @@ namespace CrunchApiExplorer.ViewModels
             }
         }
 
-        public string Response
+        public string ResponseError
         {
-            get { return _response; }
+            get { return _responseError; }
             set
             {
-                _response = value;
-                RaisePropertyChanged(() => Response);
+                _responseError = value;
+                RaisePropertyChanged(() => ResponseError);
             }
         }
 
-
+        public Lazy<XDocument> ResponseDocument
+        {
+            get { return _responseDocument; }
+            set
+            {
+                _responseDocument = value;
+                RaisePropertyChanged(() => ResponseDocument);
+                RaisePropertyChanged(() => HasResponseDocument);
+            }
+        }
 
         public Lazy<XDocument> Request
         {
@@ -196,6 +209,10 @@ namespace CrunchApiExplorer.ViewModels
             }
         } 
 
+        public bool HasResponseDocument
+        {
+            get { return ResponseDocument != null && ResponseDocument.Value != null; }
+        }
 
         public bool IsRequestVisibile
         {

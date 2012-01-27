@@ -88,6 +88,7 @@
                      Margin="2,5" Height="20"/>
 
         <TextBlock Text="Request:" Grid.Row="3" FontWeight="Bold" Visibility="{Binding IsRequestVisibile, Converter={StaticResource Converter_BooleanToVisibility}}" Margin="5,0,5,5"/>
+        
         <Controls:XmlEditor Document="{Binding Request, Mode=TwoWay}" Visibility="{Binding IsRequestVisibile, Converter={StaticResource Converter_BooleanToVisibility}}" 
                  Height="300" 
                  Grid.Row="4" 
@@ -103,7 +104,10 @@
         	</Border.Background>
         </Border>
         <TextBlock Text="Response:" Grid.Row="5" FontWeight="Bold" Margin="5,10,5,5"/>
-        
-        <TextBox Text="{Binding Response}" IsReadOnly="true" Grid.Row="6" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="5,0,5,10"/>
+
+        <Grid Grid.Row="6" Margin="5,0,5,10">
+            <TextBox Text="{Binding ResponseError}" IsReadOnly="true"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" />
+            <Controls:XmlEditor Document="{Binding ResponseDocument}" IsReadOnly="True" Visibility="{Binding HasResponseDocument, Converter={StaticResource Converter_BooleanToVisibility}}"/>
+        </Grid>
     </Grid>
 </Window>
