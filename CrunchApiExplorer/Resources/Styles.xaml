@@ -8,4 +8,32 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+    
+    <Style TargetType="Button">
+        <Setter Property="MinHeight" Value="25"/>
+        <Setter Property="MinWidth" Value="70"/>
+        
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border CornerRadius="4" Background="{TemplateBinding Background}" 
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <ContentPresenter Margin="{TemplateBinding Padding}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background">
+        	<Setter.Value>
+        		<LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+        			<GradientStop Color="#FF404040" Offset="0"/>
+        			<GradientStop Color="#FF010101" Offset="0.958"/>
+        			<GradientStop Color="#FF333333" Offset="1"/>
+        		</LinearGradientBrush>
+        	</Setter.Value>
+        </Setter>
+        <Setter Property="BorderBrush" Value="#FF181818"/>
+        <Setter Property="Foreground" Value="White"/>
+    </Style>
 </ResourceDictionary>
