@@ -42,19 +42,19 @@
 			</Grid.ColumnDefinitions>
         
 			<Label Content="Consumer Key" Grid.Row="0" Grid.Column="0"/>
-			<TextBox Text="{Binding ConsumerKey, Mode=TwoWay, ValidatesOnDataErrors=True}" Grid.Row="0" Grid.Column="1" Margin="2,2,10,2"/>
+			<TextBox Text="{Binding ConsumerKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Grid.Row="0" Grid.Column="1" Margin="2,2,10,2"/>
 
 			<Label Content="Shared Secret" Grid.Row="1" Grid.Column="0"/>
-			<TextBox Text="{Binding SharedSecret, Mode=TwoWay, ValidatesOnDataErrors=True}" Grid.Row="1" Grid.Column="1" Margin="2,2,10,2"/>
+            <TextBox Text="{Binding SharedSecret, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Grid.Row="1" Grid.Column="1" Margin="2,2,10,2"/>
 
 			<Label Content="User Authorisation Endpoint" Grid.Row="2" Grid.Column="0" Margin="2,10,2,2"/>
-			<TextBox Text="{Binding UserAuthorizationEndpoint, Mode=TwoWay, ValidatesOnDataErrors=True}" Grid.Row="2" Grid.Column="1" Margin="2,10,10,2"/>
+            <TextBox Text="{Binding UserAuthorizationEndpoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Grid.Row="2" Grid.Column="1" Margin="2,10,10,2"/>
 
 			<Label Content="Access Token Endpoint" Grid.Row="3" Grid.Column="0"/>
-			<TextBox Text="{Binding AccessTokenEndpoint, Mode=TwoWay, ValidatesOnDataErrors=True}" Grid.Row="3" Grid.Column="1" Margin="2,2,10,2"/>
+            <TextBox Text="{Binding AccessTokenEndpoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Grid.Row="3" Grid.Column="1" Margin="2,2,10,2"/>
 
 			<Label Content="Request Token Endpoint" Grid.Row="4" Grid.Column="0"/>
-			<TextBox Text="{Binding RequestTokenEndpoint, Mode=TwoWay, ValidatesOnDataErrors=True}" Grid.Row="4" Grid.Column="1" Margin="2,2,10,2"/>
+            <TextBox Text="{Binding RequestTokenEndpoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Grid.Row="4" Grid.Column="1" Margin="2,2,10,2"/>
 
 			<StackPanel Margin="0,5,10,5" Grid.Row="5" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
 				<Button Content="Cancel" Command="{Binding CancelCommand}"
