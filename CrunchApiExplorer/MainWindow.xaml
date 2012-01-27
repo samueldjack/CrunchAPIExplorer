@@ -6,7 +6,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:ViewModels="clr-namespace:CrunchApiExplorer.ViewModels"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-        xmlns:Behaviors="clr-namespace:CrunchApiExplorer.Framework.Behaviors" mc:Ignorable="d" d:DataContext="{d:DesignInstance ViewModels:MainWindowViewModel}">
+        xmlns:Behaviors="clr-namespace:CrunchApiExplorer.Framework.Behaviors"
+        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" mc:Ignorable="d" d:DataContext="{d:DesignInstance ViewModels:MainWindowViewModel}">
     <i:Interaction.Behaviors>
         <Behaviors:NotifyViewModelOfLifeCycleEvents/>
     </i:Interaction.Behaviors>
@@ -19,7 +20,30 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         
-        <Button Content="Connect" Command="{Binding ConnectCommand}"/>
+        <StackPanel Orientation="Horizontal">
+            <Label Content="Connected to:" VerticalAlignment="Center"/>
+            <TextBlock Text="Not Connected" Visibility="{Binding IsConnected, Converter={StaticResource Converter_CollapsedWhenTrue}}" VerticalAlignment="Center"/>
+            <TextBlock VerticalAlignment="Center" Visibility="{Binding IsConnected, Converter={StaticResource Converter_BooleanToVisibility}}">
+              <Hyperlink x:Name="ServerHyperlink">
+                  <i:Interaction.Triggers>
+                      <i:EventTrigger EventName="Click">
+                          <ei:LaunchUriOrFileAction Path="{Binding ConnectedServer}"/>
+                      </i:EventTrigger>
+                  </i:Interaction.Triggers>
+                  <Run Text="{Binding ConnectedServer, Mode=OneWay}"/></Hyperlink>
+            </TextBlock>
+          <Button x:Name="ConnectButton" Content="Connect" Command="{Binding ConnectCommand}" VerticalAlignment="Center" Margin="5,0">
+                <i:Interaction.Triggers>
+                    <ei:DataTrigger Binding="{Binding IsConnected}" Value="True" Comparison="Equal">
+                        <ei:ChangePropertyAction TargetObject="{Binding ElementName=ConnectButton}" PropertyName="Content" Value="Change"/>
+                    </ei:DataTrigger>
+                    <ei:DataTrigger Binding="{Binding IsConnected}" Value="False" Comparison="Equal">
+                        <ei:ChangePropertyAction TargetObject="{Binding ElementName=ConnectButton}" PropertyName="Content" Value="Connect"/>
+                    </ei:DataTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+        </StackPanel>
+        
         
         <Grid Grid.Row="1" IsEnabled="{Binding IsBusy, Converter={StaticResource Converter_Negating}}" Margin="0,5">
             <Grid.ColumnDefinitions>

@@ -20,6 +20,8 @@ namespace CrunchApiExplorer.Crunch
     {
         private readonly IVerifyUserRequestToken _requestTokenVerifier;
 
+        public event EventHandler<EventArgs> ConnectionStatusChanged;
+
         public CrunchFacade(IVerifyUserRequestToken requestTokenVerifier)
         {
             _requestTokenVerifier = requestTokenVerifier;
@@ -45,6 +47,8 @@ namespace CrunchApiExplorer.Crunch
                         var result = consumer.ProcessUserAuthorization(requestToken, verifier);
 
                         StoreParametersAndAccessToken(crunchAuthorisationParameters, result.AccessToken);
+
+                        RaiseConnectionStatucChanged(EventArgs.Empty);
                     });
         }
 
@@ -77,7 +81,24 @@ namespace CrunchApiExplorer.Crunch
             get { return !Settings.Default.AccessToken.IsNullOrWhiteSpace(); }
         }
 
-        public Task<XElement> MakeRequestAsync(string requestUrl, HttpMethod httpMethod, XDocument requestBody)
+        public Uri Authority
+        {
+            get
+            {
+                var serverSetting = Settings.Default.UserAuthorizationEndpoint;
+                if (serverSetting.IsNullOrWhiteSpace())
+                {
+                    return null;
+                }
+                else
+                {
+                    var uri = new Uri(serverSetting);
+                    return new Uri(uri.GetLeftPart(UriPartial.Authority));
+                }
+            }
+        }
+
+        public Task<XElement> MakeRequestAsync(Uri resourceUrl, HttpMethod httpMethod, XDocument requestBody)
         {
             if (!IsConnected)
             {
@@ -92,7 +113,7 @@ namespace CrunchApiExplorer.Crunch
                         SetAccessToken(consumer);
 
                         var request = consumer.PrepareAuthorizedRequest(
-                            new MessageReceivingEndpoint(requestUrl,
+                            new MessageReceivingEndpoint(new Uri(Authority, resourceUrl),
                                                          TranslateHttpMethod(httpMethod)),
                             Settings.Default.AccessToken.DecryptBase64EncodedString());
 
@@ -177,6 +198,12 @@ namespace CrunchApiExplorer.Crunch
             Settings.Default.SharedSecret = crunchAuthorisationParameters.SharedSecret.EncryptAndEncodeAsBase64();
             Settings.Default.AccessToken = accessToken.EncryptAndEncodeAsBase64();
             Settings.Default.Save();
+        }
+
+        protected void RaiseConnectionStatucChanged(EventArgs e)
+        {
+            EventHandler<EventArgs> handler = ConnectionStatusChanged;
+            if (handler != null) handler(this, e);
         }
     }
 }

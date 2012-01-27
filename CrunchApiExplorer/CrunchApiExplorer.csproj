@@ -103,9 +103,11 @@
     <Compile Include="Framework\Extensions\DoubleExtensions.cs" />
     <Compile Include="Framework\Extensions\HttpWebRequestExtensions.cs" />
     <Compile Include="Framework\Extensions\StringExtensions.cs" />
+    <Compile Include="Framework\Extensions\TaskFactoryExtensions.cs" />
     <Compile Include="Framework\MVVM\ActionCommand.cs" />
     <Compile Include="Framework\MVVM\CommandBase.cs" />
     <Compile Include="Framework\MVVM\CommandHolder.cs" />
+    <Compile Include="Framework\MVVM\Converters\ConfigurableBooleanToVisibilityConverter.cs" />
     <Compile Include="Framework\MVVM\Converters\NegatingConverter.cs" />
     <Compile Include="Infrastructure\Modules\MiscellaneousModule.cs" />
     <Compile Include="Infrastructure\Schedulers.cs" />

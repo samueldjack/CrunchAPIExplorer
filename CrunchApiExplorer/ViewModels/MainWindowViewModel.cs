@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Xml.Linq;
 using CrunchApiExplorer.Crunch;
 using CrunchApiExplorer.Framework.MVVM;
+using CrunchApiExplorer.Infrastructure;
 using CrunchApiExplorer.Infrastructure.Services;
 using CrunchApiExplorer.Framework.Extensions;
 
@@ -24,17 +25,24 @@ namespace CrunchApiExplorer.ViewModels
         private bool _isBusy;
         private HttpMethod _selectedHttpMethod;
         private string _request;
+        private string _connectedServer;
 
         public MainWindowViewModel(IDialogService dialogService, Func<AuthenticateDialogViewModel> authenticateViewModelFactory, ICrunchFacade crunchFacade)
         {
             _dialogService = dialogService;
             _authenticateViewModelFactory = authenticateViewModelFactory;
             _crunchFacade = crunchFacade;
+
+            _crunchFacade.ConnectionStatusChanged += delegate
+                                                         {
+                                                             // the event gets raised on a background thread, so marshal to the UI thread
+                                                             Task.Factory.StartNew(UpdateConnectedServer,Schedulers.UIThread);
+                                                         };
         }
 
         public ICommand ConnectCommand
         {
-            get { return Commands.GetOrCreateCommand(() => ConnectCommand, HandleConnect); }
+            get { return Commands.GetOrCreateCommand(() => ConnectCommand, DoConnect); }
         }
 
         public ICommand MakeRequestCommand
@@ -63,13 +71,15 @@ namespace CrunchApiExplorer.ViewModels
             IsBusy = true;
             Response = string.Empty;
 
+            var requestUri = new Uri(RequestUrl, UriKind.Relative);
+
             XDocument requestDocument = null;
             if (SelectedHttpMethod == HttpMethod.Post && !Request.IsNullOrWhiteSpace())
             {
                 requestDocument = XDocument.Parse(Request);
-            } 
+            }
 
-            _crunchFacade.MakeRequestAsync(RequestUrl, SelectedHttpMethod, requestDocument)
+            _crunchFacade.MakeRequestAsync(requestUri, SelectedHttpMethod, requestDocument)
                 .ContinueWith(HandleRequestComplete);
         }
 
@@ -87,7 +97,7 @@ namespace CrunchApiExplorer.ViewModels
             }
         }
 
-        private void HandleConnect()
+        private void DoConnect()
         {
             var viewModel = _authenticateViewModelFactory();
             _dialogService.ShowDialogForViewModel(viewModel);
@@ -138,9 +148,37 @@ namespace CrunchApiExplorer.ViewModels
             get { return SelectedHttpMethod == HttpMethod.Post; }
         }
 
+        public string ConnectedServer
+        {
+            get { return _connectedServer; }
+            set
+            {
+                _connectedServer = value;
+                RaisePropertyChanged(() => ConnectedServer);
+            }
+        } 
+
+        public bool IsConnected
+        {
+            get { return _crunchFacade.IsConnected; }
+        }
+
         protected override void OnViewLoaded()
         {
             SelectedHttpMethod = HttpMethod.Get;
+
+            UpdateConnectedServer();
+
+            if (!IsConnected)
+            {
+                DoConnect();
+            }
+        }
+
+        private void UpdateConnectedServer()
+        {
+            ConnectedServer = IsConnected ? _crunchFacade.Authority.ToString() : string.Empty;
+            RaisePropertyChanged(() => IsConnected);
         }
     }
 }
