@@ -78,7 +78,19 @@ namespace CrunchApiExplorer.ViewModels
                 return;
             }
 
-            var requestDocument = GetRequestDocument();
+            XDocument requestDocument = null;
+            if (SelectedHttpMethod == HttpMethod.Post)
+            {
+                try
+                {
+                    requestDocument = _request.Value;
+                }
+                catch (XmlException ex)
+                {
+                    _dialogService.ShowErrorMessage("The xml you have entered contains an error:" + ex.Message);
+                    return;
+                }
+            }
 
             if (!EnsureUserHasConfirmedUpdateToLiveServer())
             {
@@ -103,25 +115,6 @@ namespace CrunchApiExplorer.ViewModels
             }
 
             return uri;
-        }
-
-        private XDocument GetRequestDocument()
-        {
-            if (SelectedHttpMethod == HttpMethod.Post)
-            {
-                try
-                {
-                    var requestDocument = _request.Value;
-                    return requestDocument;
-                }
-                catch (XmlException ex)
-                {
-                    _dialogService.ShowErrorMessage("The xml you have entered contains an error:" + ex.Message);
-                    return null;
-                }
-            }
-
-            return null;
         }
 
         private bool EnsureUserHasConfirmedUpdateToLiveServer()
