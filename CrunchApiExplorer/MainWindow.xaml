@@ -61,7 +61,7 @@
         	</Border.Background>
         </Border>
 
-        <Grid Grid.Row="1" IsEnabled="{Binding IsBusy, Converter={StaticResource Converter_Negating}}" Margin="10">
+        <Grid Grid.Row="1" IsEnabled="{Binding CanEditRequest}" Margin="10">
                 <Grid.ColumnDefinitions>
                   <ColumnDefinition Width="Auto"/>
                   <ColumnDefinition Width="*"/>
@@ -91,7 +91,8 @@
         <Controls:XmlEditor Document="{Binding Request, Mode=TwoWay}" Visibility="{Binding IsRequestVisibile, Converter={StaticResource Converter_BooleanToVisibility}}" 
                  Height="300" 
                  Grid.Row="4" 
-                 Margin="5,0,5,10"/>
+                 Margin="5,0,5,10"
+                 IsEnabled="{Binding CanEditRequest}"/>
 
 		<Border CornerRadius="8" Grid.Row="5" Grid.RowSpan="2" Margin="0,5">
         	<Border.Background>

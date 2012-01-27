@@ -151,12 +151,18 @@ namespace CrunchApiExplorer.ViewModels
         public bool IsBusy
         {
             get { return _isBusy; }
-            set
+            private set
             {
                 _isBusy = value;
                 RaisePropertyChanged(() => IsBusy);
+                RaisePropertyChanged(() => CanEditRequest);
             }
         } 
+
+        public bool CanEditRequest
+        {
+            get { return IsConnected && !IsBusy; }
+        }
 
         public string RequestUrl
         {
@@ -227,6 +233,7 @@ namespace CrunchApiExplorer.ViewModels
         {
             ConnectedServer = IsConnected ? _crunchFacade.Authority.ToString() : string.Empty;
             RaisePropertyChanged(() => IsConnected);
+            RaisePropertyChanged(() => CanEditRequest);
         }
 
         public string this[string columnName]
