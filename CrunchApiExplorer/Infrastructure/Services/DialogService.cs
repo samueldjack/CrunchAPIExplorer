@@ -43,8 +43,18 @@ namespace CrunchApiExplorer.Infrastructure.Services
 
         public void ShowErrorMessage(string message)
         {
-            MessageBox.Show(GetCurrentTopWindow(), message, "Crunch API Explorer", MessageBoxButton.OK,
-                            MessageBoxImage.Error);
+            ShowMessageBox(message, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        private MessageBoxResult ShowMessageBox(string message, MessageBoxButton messageBoxButton, MessageBoxImage messageBoxImage)
+        {
+            return MessageBox.Show(GetCurrentTopWindow(), message, "Crunch API Explorer", messageBoxButton,
+                            messageBoxImage);
+        }
+
+        public bool AskYesNoQuestion(string question)
+        {
+            return ShowMessageBox(question, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;
         }
 
         private bool? ShowDialog(DialogWindow window)

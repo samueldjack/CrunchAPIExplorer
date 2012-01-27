@@ -6,5 +6,6 @@ namespace CrunchApiExplorer.Infrastructure.Services
     {
         bool? ShowDialogForViewModel(DialogViewModel viewModel);
         void ShowErrorMessage(string message);
+        bool AskYesNoQuestion(string question);
     }
 }

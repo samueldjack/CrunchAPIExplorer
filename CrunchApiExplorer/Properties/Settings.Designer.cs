@@ -106,5 +106,14 @@ namespace CrunchApiExplorer.Properties {
                 this["BaseAddress"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://app.crunch.co.uk/")]
+        public string LiveServer {
+            get {
+                return ((string)(this["LiveServer"]));
+            }
+        }
     }
 }

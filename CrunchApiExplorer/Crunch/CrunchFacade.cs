@@ -152,6 +152,11 @@ namespace CrunchApiExplorer.Crunch
                 return HttpDeliveryMethods.PostRequest
                     | HttpDeliveryMethods.AuthorizationHeaderRequest;
             }
+            else if (httpMethod == HttpMethod.Put)
+            {
+                return HttpDeliveryMethods.PutRequest
+                    | HttpDeliveryMethods.AuthorizationHeaderRequest;
+            }
             else if (httpMethod == HttpMethod.Delete)
             {
                 return HttpDeliveryMethods.DeleteRequest

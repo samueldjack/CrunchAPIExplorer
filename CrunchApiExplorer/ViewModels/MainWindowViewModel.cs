@@ -12,6 +12,7 @@ using CrunchApiExplorer.Framework.MVVM;
 using CrunchApiExplorer.Infrastructure;
 using CrunchApiExplorer.Infrastructure.Services;
 using CrunchApiExplorer.Framework.Extensions;
+using CrunchApiExplorer.Properties;
 
 namespace CrunchApiExplorer.ViewModels
 {
@@ -79,8 +80,24 @@ namespace CrunchApiExplorer.ViewModels
                 requestDocument = XDocument.Parse(Request);
             }
 
+            if (!EnsureUserHasConfirmedUpdateToLiveServer())
+            {
+                return;
+            }
+
             _crunchFacade.MakeRequestAsync(requestUri, SelectedHttpMethod, requestDocument)
                 .ContinueWith(HandleRequestComplete);
+        }
+
+        private bool EnsureUserHasConfirmedUpdateToLiveServer()
+        {
+            if (ConnectedServer.Equals(Settings.Default.LiveServer, StringComparison.InvariantCultureIgnoreCase)
+                && SelectedHttpMethod != HttpMethod.Get)
+            {
+                return _dialogService.AskYesNoQuestion("You are about to change data on the live server. Are you sure you want to continue?");
+            }
+
+            return true;
         }
 
         private void HandleRequestComplete(Task<XElement> task)
@@ -145,7 +162,7 @@ namespace CrunchApiExplorer.ViewModels
 
         public bool IsRequestVisibile
         {
-            get { return SelectedHttpMethod == HttpMethod.Post; }
+            get { return SelectedHttpMethod == HttpMethod.Post || SelectedHttpMethod == HttpMethod.Put; }
         }
 
         public string ConnectedServer
