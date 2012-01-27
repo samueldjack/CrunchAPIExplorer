@@ -11,10 +11,6 @@
     <Setting Name="AccessToken" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="RequestTokenEndpoint" Type="System.String" Scope="User">
-      <Value Profile="(Default)">
-https://testing.crunch.co.uk/crunch-core/oauth/request_token</Value>
-    </Setting>
     <Setting Name="AccessTokenEndpoint" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://testing.crunch.co.uk/crunch-core/oauth/access_token</Value>
     </Setting>
@@ -23,6 +19,9 @@ https://testing.crunch.co.uk/crunch-core/oauth/request_token</Value>
     </Setting>
     <Setting Name="LiveServer" Type="System.Uri" Scope="Application">
       <Value Profile="(Default)">https://app.crunch.co.uk/</Value>
+    </Setting>
+    <Setting Name="RequestTokenEndpoint" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://testing.crunch.co.uk/crunch-core/oauth/request_token</Value>
     </Setting>
   </Settings>
 </SettingsFile>

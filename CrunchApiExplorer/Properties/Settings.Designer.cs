@@ -61,18 +61,6 @@ namespace CrunchApiExplorer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\nhttps://testing.crunch.co.uk/crunch-core/oauth/request_token")]
-        public string RequestTokenEndpoint {
-            get {
-                return ((string)(this["RequestTokenEndpoint"]));
-            }
-            set {
-                this["RequestTokenEndpoint"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("https://testing.crunch.co.uk/crunch-core/oauth/access_token")]
         public string AccessTokenEndpoint {
             get {
@@ -101,6 +89,18 @@ namespace CrunchApiExplorer.Properties {
         public global::System.Uri LiveServer {
             get {
                 return ((global::System.Uri)(this["LiveServer"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://testing.crunch.co.uk/crunch-core/oauth/request_token")]
+        public string RequestTokenEndpoint {
+            get {
+                return ((string)(this["RequestTokenEndpoint"]));
+            }
+            set {
+                this["RequestTokenEndpoint"] = value;
             }
         }
     }
