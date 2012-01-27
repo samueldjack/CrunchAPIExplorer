@@ -7,7 +7,8 @@
         xmlns:ViewModels="clr-namespace:CrunchApiExplorer.ViewModels"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:Behaviors="clr-namespace:CrunchApiExplorer.Framework.Behaviors"
-        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" mc:Ignorable="d" d:DataContext="{d:DesignInstance ViewModels:MainWindowViewModel}">
+        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" mc:Ignorable="d" d:DataContext="{d:DesignInstance ViewModels:MainWindowViewModel}"
+        Icon="CrunchApiExplorer.ico">
     <i:Interaction.Behaviors>
         <Behaviors:NotifyViewModelOfLifeCycleEvents/>
     </i:Interaction.Behaviors>

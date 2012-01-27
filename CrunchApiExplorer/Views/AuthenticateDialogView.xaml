@@ -7,7 +7,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:Behaviors="clr-namespace:CrunchApiExplorer.Framework.Behaviors"
              xmlns:Controls="clr-namespace:CrunchApiExplorer.Infrastructure.Controls" mc:Ignorable="d" 
-             d:DesignHeight="201" d:DesignWidth="543" Controls:DialogWindow.InitialWidth="543" Controls:DialogWindow.InitialHeight="201" d:DataContext="{d:DesignInstance ViewModels:AuthenticateDialogViewModel}">
+             d:DesignHeight="214" d:DesignWidth="568" Controls:DialogWindow.InitialWidth="543" d:DataContext="{d:DesignInstance ViewModels:AuthenticateDialogViewModel}">
     <i:Interaction.Behaviors>
         <Behaviors:NotifyViewModelOfLifeCycleEvents/>
     </i:Interaction.Behaviors>

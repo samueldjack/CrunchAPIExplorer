@@ -110,9 +110,9 @@ namespace CrunchApiExplorer.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("https://app.crunch.co.uk/")]
-        public string LiveServer {
+        public global::System.Uri LiveServer {
             get {
-                return ((string)(this["LiveServer"]));
+                return ((global::System.Uri)(this["LiveServer"]));
             }
         }
     }

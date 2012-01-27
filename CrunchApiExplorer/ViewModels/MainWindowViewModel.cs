@@ -69,9 +69,6 @@ namespace CrunchApiExplorer.ViewModels
 
         private void HandleMakeRequest()
         {
-            IsBusy = true;
-            Response = string.Empty;
-
             var requestUri = new Uri(RequestUrl, UriKind.Relative);
 
             XDocument requestDocument = null;
@@ -85,13 +82,16 @@ namespace CrunchApiExplorer.ViewModels
                 return;
             }
 
+            IsBusy = true;
+            Response = string.Empty;
+
             _crunchFacade.MakeRequestAsync(requestUri, SelectedHttpMethod, requestDocument)
                 .ContinueWith(HandleRequestComplete);
         }
 
         private bool EnsureUserHasConfirmedUpdateToLiveServer()
         {
-            if (ConnectedServer.Equals(Settings.Default.LiveServer, StringComparison.InvariantCultureIgnoreCase)
+            if (_crunchFacade.Authority.Authority == Settings.Default.LiveServer.Authority
                 && SelectedHttpMethod != HttpMethod.Get)
             {
                 return _dialogService.AskYesNoQuestion("You are about to change data on the live server. Are you sure you want to continue?");
