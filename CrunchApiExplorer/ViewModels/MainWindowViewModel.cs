@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml.Linq;
+using CrunchApiExplorer.Controls;
 using CrunchApiExplorer.Crunch;
 using CrunchApiExplorer.Framework.MVVM;
 using CrunchApiExplorer.Infrastructure;
@@ -16,7 +18,7 @@ using CrunchApiExplorer.Properties;
 
 namespace CrunchApiExplorer.ViewModels
 {
-    class MainWindowViewModel : ViewModel
+    class MainWindowViewModel : ViewModel, IDataErrorInfo
     {
         private readonly IDialogService _dialogService;
         private readonly Func<AuthenticateDialogViewModel> _authenticateViewModelFactory;
@@ -25,7 +27,7 @@ namespace CrunchApiExplorer.ViewModels
         private string _response;
         private bool _isBusy;
         private HttpMethod _selectedHttpMethod;
-        private string _request;
+        private Lazy<XDocument> _request;
         private string _connectedServer;
 
         public MainWindowViewModel(IDialogService dialogService, Func<AuthenticateDialogViewModel> authenticateViewModelFactory, ICrunchFacade crunchFacade)
@@ -72,9 +74,9 @@ namespace CrunchApiExplorer.ViewModels
             var requestUri = new Uri(RequestUrl, UriKind.Relative);
 
             XDocument requestDocument = null;
-            if (SelectedHttpMethod == HttpMethod.Post && !Request.IsNullOrWhiteSpace())
+            if (SelectedHttpMethod == HttpMethod.Post)
             {
-                requestDocument = XDocument.Parse(Request);
+                requestDocument = _request.Value;
             }
 
             if (!EnsureUserHasConfirmedUpdateToLiveServer())
@@ -150,7 +152,9 @@ namespace CrunchApiExplorer.ViewModels
             }
         }
 
-        public string Request
+
+
+        public Lazy<XDocument> Request
         {
             get { return _request; }
             set
@@ -159,6 +163,7 @@ namespace CrunchApiExplorer.ViewModels
                 RaisePropertyChanged(() => Request);
             }
         } 
+
 
         public bool IsRequestVisibile
         {
@@ -196,6 +201,16 @@ namespace CrunchApiExplorer.ViewModels
         {
             ConnectedServer = IsConnected ? _crunchFacade.Authority.ToString() : string.Empty;
             RaisePropertyChanged(() => IsConnected);
+        }
+
+        public string this[string columnName]
+        {
+            get { return string.Empty; }
+        }
+
+        public string Error
+        {
+            get { return string.Empty; }
         }
     }
 }

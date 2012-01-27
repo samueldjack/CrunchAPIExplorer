@@ -7,7 +7,9 @@
         xmlns:ViewModels="clr-namespace:CrunchApiExplorer.ViewModels"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:Behaviors="clr-namespace:CrunchApiExplorer.Framework.Behaviors"
-        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" mc:Ignorable="d" d:DataContext="{d:DesignInstance ViewModels:MainWindowViewModel}"
+        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+        xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+        xmlns:Controls="clr-namespace:CrunchApiExplorer.Controls" mc:Ignorable="d" d:DataContext="{d:DesignInstance ViewModels:MainWindowViewModel}"
         Icon="CrunchApiExplorer.ico">
     <i:Interaction.Behaviors>
         <Behaviors:NotifyViewModelOfLifeCycleEvents/>
@@ -64,14 +66,12 @@
                      IsIndeterminate="True"
                      Grid.Row="2" 
                      Margin="2,5" Height="20"/>
-        
-        <TextBox Text="{Binding Request, Mode=TwoWay}" Visibility="{Binding IsRequestVisibile, Converter={StaticResource Converter_BooleanToVisibility}}" 
-                 VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
-                 AcceptsReturn="true"
-                 AcceptsTab="True"
+
+        <Controls:XmlEditor Document="{Binding Request, Mode=TwoWay}" Visibility="{Binding IsRequestVisibile, Converter={StaticResource Converter_BooleanToVisibility}}" 
                  Height="300" 
                  Grid.Row="3" 
                  Margin="0,10"/>
+
         <TextBox Text="{Binding Response}" IsReadOnly="true" Grid.Row="4" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="0,10"/>
     </Grid>
 </Window>

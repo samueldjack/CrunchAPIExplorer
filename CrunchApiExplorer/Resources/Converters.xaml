@@ -4,4 +4,5 @@
     <Converters:NegatingConverter x:Key="Converter_Negating"/>
     <BooleanToVisibilityConverter x:Key="Converter_BooleanToVisibility"/>
     <Converters:BooleanToAnythingConverter x:Key="Converter_CollapsedWhenTrue" ValueWhenFalse="{x:Static Visibility.Visible}" ValueWhenTrue="{x:Static Visibility.Collapsed}"/>
+    <Converters:TrueWhenStringNonEmptyConverter x:Key="Converter_TrueWhenNonEmpty"/>
 </ResourceDictionary>

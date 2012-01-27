@@ -54,6 +54,9 @@
     <Reference Include="DotNetOpenAuth">
       <HintPath>..\packages\DotNetOpenAuth.3.4.7.11121\lib\DotNetOpenAuth.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.AvalonEdit">
+      <HintPath>..\packages\AvalonEdit.4.1.0.8000\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.1.2.11\lib\net40-full\log4net.dll</HintPath>
     </Reference>
@@ -104,6 +107,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\XmlEditor.cs" />
     <Compile Include="Crunch\CrunchAuthorisationParameters.cs" />
     <Compile Include="Crunch\CrunchFacade.cs" />
     <Compile Include="Crunch\DesktopRequestTokenVerifier.cs" />
@@ -120,6 +124,7 @@
     <Compile Include="Framework\MVVM\CommandHolder.cs" />
     <Compile Include="Framework\MVVM\Converters\ConfigurableBooleanToVisibilityConverter.cs" />
     <Compile Include="Framework\MVVM\Converters\NegatingConverter.cs" />
+    <Compile Include="Framework\MVVM\Converters\TrueWhenStringNonEmptyConverter.cs" />
     <Compile Include="Framework\MVVM\ErrorManager.cs" />
     <Compile Include="Infrastructure\Modules\MiscellaneousModule.cs" />
     <Compile Include="Infrastructure\Schedulers.cs" />
@@ -173,6 +178,10 @@
     <Page Include="Resources\Styles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\AuthenticateDialogView.xaml">
       <SubType>Designer</SubType>
