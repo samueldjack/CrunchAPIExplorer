@@ -126,7 +126,7 @@ namespace CrunchApiExplorer.ViewModels
             task.ContinueWith(HandleChangeConnectionCompleted, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
-        private void HandleChangeConnectionCompleted(Task task)
+        private void HandleChangeConnectionCompleted(Task<bool> task)
         {
             IsBusy = false;
 
@@ -134,7 +134,7 @@ namespace CrunchApiExplorer.ViewModels
             {
                 _dialogService.ShowErrorMessage(task.Exception.InnerException.Message);
             }
-            else
+            else if (task.Result)
             {
                 Close(true);
             }

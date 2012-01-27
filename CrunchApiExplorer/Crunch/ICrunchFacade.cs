@@ -7,7 +7,7 @@ namespace CrunchApiExplorer.Crunch
 {
     public interface ICrunchFacade
     {
-        Task ChangeConnectionAsync(CrunchAuthorisationParameters crunchAuthorisationParameters);
+        Task<bool> ChangeConnectionAsync(CrunchAuthorisationParameters crunchAuthorisationParameters);
         CrunchAuthorisationParameters GetCurrentAuthorisationParameters();
         Task<XElement> MakeRequestAsync(Uri resourceUri, HttpMethod httpMethod, XDocument requestBody);
         Uri Authority { get; }

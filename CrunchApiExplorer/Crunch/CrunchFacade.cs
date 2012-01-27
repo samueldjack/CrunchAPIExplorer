@@ -27,7 +27,7 @@ namespace CrunchApiExplorer.Crunch
             _requestTokenVerifier = requestTokenVerifier;
         }
 
-        public Task ChangeConnectionAsync(CrunchAuthorisationParameters crunchAuthorisationParameters)
+        public Task<bool> ChangeConnectionAsync(CrunchAuthorisationParameters crunchAuthorisationParameters)
         {
             return Task.Factory.StartNew(
                 () =>
@@ -43,12 +43,19 @@ namespace CrunchApiExplorer.Crunch
 
                         // wait synchronously for the result. We're already on a background thread, so we won't block the UI
                         var verifier = verifierTask.Result;
+                        if (verifier != null)
+                        {
+                            var result = consumer.ProcessUserAuthorization(requestToken, verifier);
 
-                        var result = consumer.ProcessUserAuthorization(requestToken, verifier);
-
-                        StoreParametersAndAccessToken(crunchAuthorisationParameters, result.AccessToken);
-
-                        RaiseConnectionStatucChanged(EventArgs.Empty);
+                            StoreParametersAndAccessToken(crunchAuthorisationParameters, result.AccessToken);
+                            RaiseConnectionStatucChanged(EventArgs.Empty);
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                        
                     });
         }
 
