@@ -1,7 +1,7 @@
 ﻿<Window x:Class="CrunchApiExplorer.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Crunch API Explorer by Seaturtle Software" Height="350" Width="525"
+        Title="Crunch API Explorer by Seaturtle Software" Height="600" Width="800"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:ViewModels="clr-namespace:CrunchApiExplorer.ViewModels"
@@ -9,6 +9,7 @@
         xmlns:Behaviors="clr-namespace:CrunchApiExplorer.Framework.Behaviors"
         xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
         xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+        WindowStartupLocation="CenterScreen"
         xmlns:Controls="clr-namespace:CrunchApiExplorer.Controls" mc:Ignorable="d" d:DataContext="{d:DesignInstance ViewModels:MainWindowViewModel}"
         Icon="CrunchApiExplorer.ico">
     <i:Interaction.Behaviors>
@@ -30,7 +31,7 @@
                 <Label Content="Connected to:" VerticalAlignment="Center" Foreground="White" FontSize="16" Margin="0,0,5,0"/>
                 <TextBlock Text="Not Connected" Visibility="{Binding IsConnected, Converter={StaticResource Converter_CollapsedWhenTrue}}" VerticalAlignment="Center" FontSize="16"/>
                 <TextBlock VerticalAlignment="Center" Visibility="{Binding IsConnected, Converter={StaticResource Converter_BooleanToVisibility}}">
-              <Hyperlink x:Name="ServerHyperlink">
+              <Hyperlink x:Name="ServerHyperlink" FontSize="16">
                   <i:Interaction.Triggers>
                       <i:EventTrigger EventName="Click">
                           <ei:LaunchUriOrFileAction Path="{Binding ConnectedServer}"/>
@@ -69,9 +70,15 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Url:" Grid.Column="0" Margin="5,0"/>
-                <TextBox Text="{Binding RequestUrl, Mode=TwoWay}" Grid.Column="1" Margin="5,0"/>
-                <Label Content="Http Method:" Grid.Column="2" Margin="5,0"/>
-                <ComboBox ItemsSource="{Binding AvailableHttpMethods}" SelectedItem="{Binding SelectedHttpMethod, Mode=TwoWay}" Grid.Column="3" Width="75" Margin="5,0"/>
+            <TextBox Text="{Binding RequestUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Margin="5,0" VerticalAlignment="Center">
+                <i:Interaction.Triggers>
+                    <ei:KeyTrigger Key="Enter">
+                        <i:InvokeCommandAction Command="{Binding MakeRequestCommand}"/>
+                    </ei:KeyTrigger>
+                </i:Interaction.Triggers>
+            </TextBox>
+          <Label Content="Http Method:" Grid.Column="2" Margin="5,0" VerticalAlignment="Center"/>
+                <ComboBox ItemsSource="{Binding AvailableHttpMethods}" SelectedItem="{Binding SelectedHttpMethod, Mode=TwoWay}" Grid.Column="3" Width="75" Margin="5,0" VerticalContentAlignment="Center" VerticalAlignment="Center"/>
                 <Button Content="Go!" Command="{Binding MakeRequestCommand}" Grid.Column="4"/>
         </Grid>
 

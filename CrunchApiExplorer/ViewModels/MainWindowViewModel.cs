@@ -83,7 +83,7 @@ namespace CrunchApiExplorer.ViewModels
             {
                 try
                 {
-                    requestDocument = _request.Value;
+                    requestDocument = _request != null ? _request.Value : null;
                 }
                 catch (XmlException ex)
                 {
