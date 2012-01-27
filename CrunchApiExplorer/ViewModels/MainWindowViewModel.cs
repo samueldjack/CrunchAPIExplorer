@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -8,6 +10,7 @@ using System.Xml.Linq;
 using CrunchApiExplorer.Crunch;
 using CrunchApiExplorer.Framework.MVVM;
 using CrunchApiExplorer.Infrastructure.Services;
+using CrunchApiExplorer.Framework.Extensions;
 
 namespace CrunchApiExplorer.ViewModels
 {
@@ -19,6 +22,8 @@ namespace CrunchApiExplorer.ViewModels
         private string _requestUrl;
         private string _response;
         private bool _isBusy;
+        private HttpMethod _selectedHttpMethod;
+        private string _request;
 
         public MainWindowViewModel(IDialogService dialogService, Func<AuthenticateDialogViewModel> authenticateViewModelFactory, ICrunchFacade crunchFacade)
         {
@@ -37,11 +42,34 @@ namespace CrunchApiExplorer.ViewModels
             get { return Commands.GetOrCreateCommand(() => MakeRequestCommand, HandleMakeRequest); }
         }
 
+        public IList<HttpMethod> AvailableHttpMethods
+        {
+            get { return new[] {HttpMethod.Get, HttpMethod.Post, HttpMethod.Put, HttpMethod.Delete}; }
+        }
+
+        public HttpMethod SelectedHttpMethod
+        {
+            get { return _selectedHttpMethod; }
+            set
+            {
+                _selectedHttpMethod = value;
+                RaisePropertyChanged(() => SelectedHttpMethod);
+                RaisePropertyChanged(() => IsRequestVisibile);
+            }
+        } 
+
         private void HandleMakeRequest()
         {
             IsBusy = true;
+            Response = string.Empty;
 
-            _crunchFacade.MakeRequestAsync(RequestUrl)
+            XDocument requestDocument = null;
+            if (SelectedHttpMethod == HttpMethod.Post && !Request.IsNullOrWhiteSpace())
+            {
+                requestDocument = XDocument.Parse(Request);
+            } 
+
+            _crunchFacade.MakeRequestAsync(RequestUrl, SelectedHttpMethod, requestDocument)
                 .ContinueWith(HandleRequestComplete);
         }
 
@@ -93,7 +121,26 @@ namespace CrunchApiExplorer.ViewModels
                 _response = value;
                 RaisePropertyChanged(() => Response);
             }
+        }
+
+        public string Request
+        {
+            get { return _request; }
+            set
+            {
+                _request = value;
+                RaisePropertyChanged(() => Request);
+            }
         } 
 
+        public bool IsRequestVisibile
+        {
+            get { return SelectedHttpMethod == HttpMethod.Post; }
+        }
+
+        protected override void OnViewLoaded()
+        {
+            SelectedHttpMethod = HttpMethod.Get;
+        }
     }
 }

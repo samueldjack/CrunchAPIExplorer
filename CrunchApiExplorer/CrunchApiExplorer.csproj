@@ -101,6 +101,7 @@
     <Compile Include="Crunch\InMemoryTokenManager.cs" />
     <Compile Include="Crunch\IVerifyUserRequestToken.cs" />
     <Compile Include="Framework\Extensions\DoubleExtensions.cs" />
+    <Compile Include="Framework\Extensions\HttpWebRequestExtensions.cs" />
     <Compile Include="Framework\Extensions\StringExtensions.cs" />
     <Compile Include="Framework\MVVM\ActionCommand.cs" />
     <Compile Include="Framework\MVVM\CommandBase.cs" />

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -75,7 +77,7 @@ namespace CrunchApiExplorer.Crunch
             get { return !Settings.Default.AccessToken.IsNullOrWhiteSpace(); }
         }
 
-        public Task<XElement> MakeRequestAsync(string requestUrl)
+        public Task<XElement> MakeRequestAsync(string requestUrl, HttpMethod httpMethod, XDocument requestBody)
         {
             if (!IsConnected)
             {
@@ -88,9 +90,14 @@ namespace CrunchApiExplorer.Crunch
 
             var request = consumer.PrepareAuthorizedRequest(
                 new MessageReceivingEndpoint(requestUrl,
-                                             HttpDeliveryMethods.GetRequest |
-                                             HttpDeliveryMethods.AuthorizationHeaderRequest),
+                                             TranslateHttpMethod(httpMethod)),
                 Settings.Default.AccessToken.DecryptBase64EncodedString());
+
+
+            if (httpMethod == HttpMethod.Post && requestBody != null)
+            {
+                request.SetRequestBody(requestBody.ToString(SaveOptions.DisableFormatting), "application/xml");
+            }
 
             var task = Task.Factory.FromAsync<WebResponse>(request.BeginGetResponse, request.EndGetResponse, null)
                 .ContinueWith(t =>
@@ -106,6 +113,29 @@ namespace CrunchApiExplorer.Crunch
                                   });
 
             return task;
+        }
+
+        private static HttpDeliveryMethods TranslateHttpMethod(HttpMethod httpMethod)
+        {
+            if (httpMethod == HttpMethod.Get)
+            {
+                return HttpDeliveryMethods.GetRequest |
+                       HttpDeliveryMethods.AuthorizationHeaderRequest;
+            }
+            else if (httpMethod == HttpMethod.Post)
+            {
+                return HttpDeliveryMethods.PostRequest
+                    | HttpDeliveryMethods.AuthorizationHeaderRequest;
+            }
+            else if (httpMethod == HttpMethod.Delete)
+            {
+                return HttpDeliveryMethods.DeleteRequest
+                    | HttpDeliveryMethods.AuthorizationHeaderRequest;
+            }
+            else
+            {
+                throw new ArgumentException("HttpMethod not supported");
+            }
         }
 
         private void SetAccessToken(DesktopConsumer consumer)
