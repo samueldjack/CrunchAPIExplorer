@@ -59,6 +59,48 @@ namespace CrunchApiExplorer.Crunch
                     });
         }
 
+        public Task<XElement> MakeRequestAsync(Uri resourceUrl, HttpMethod httpMethod, XDocument requestBody)
+        {
+            if (!IsConnected)
+            {
+                throw new InvalidOperationException("You must connect to crunch first");
+            }
+
+            var task = Task.Factory.StartNew(
+                () =>
+                    {
+                        var cap = GetCurrentAuthorisationParameters();
+                        var consumer = CreateConsumer(cap);
+                        SetAccessToken(consumer);
+
+                        var request = consumer.PrepareAuthorizedRequest(
+                            new MessageReceivingEndpoint(new Uri(Authority, resourceUrl),
+                                                         TranslateHttpMethod(httpMethod)),
+                            Settings.Default.AccessToken.DecryptBase64EncodedString());
+
+
+                        if (httpMethod == HttpMethod.Post && requestBody != null)
+                        {
+                            request.SetRequestBody(
+                                requestBody.ToString(SaveOptions.DisableFormatting),
+                                "application/xml");
+                        }
+
+                        var response = request.GetResponse();
+                        using (var stream = response.GetResponseStream())
+                        {
+                            var xmlReader = XmlReader.Create(stream);
+                            xmlReader.MoveToContent();
+
+                            var document = (XElement) XNode.ReadFrom(xmlReader);
+                            return document;
+                        }
+
+                    });
+
+            return task;
+        }
+
         private static DesktopConsumer CreateConsumer(CrunchAuthorisationParameters crunchAuthorisationParameters)
         {
             var tokenManager = new InMemoryTokenManager(crunchAuthorisationParameters.ConsumerKey,
@@ -103,48 +145,6 @@ namespace CrunchApiExplorer.Crunch
                     return new Uri(uri.GetLeftPart(UriPartial.Authority));
                 }
             }
-        }
-
-        public Task<XElement> MakeRequestAsync(Uri resourceUrl, HttpMethod httpMethod, XDocument requestBody)
-        {
-            if (!IsConnected)
-            {
-                throw new InvalidOperationException("You must connect to crunch first");
-            }
-
-            var task = Task.Factory.StartNew(
-                () =>
-                    {
-                        var cap = GetCurrentAuthorisationParameters();
-                        var consumer = CreateConsumer(cap);
-                        SetAccessToken(consumer);
-
-                        var request = consumer.PrepareAuthorizedRequest(
-                            new MessageReceivingEndpoint(new Uri(Authority, resourceUrl),
-                                                         TranslateHttpMethod(httpMethod)),
-                            Settings.Default.AccessToken.DecryptBase64EncodedString());
-
-
-                        if (httpMethod == HttpMethod.Post && requestBody != null)
-                        {
-                            request.SetRequestBody(
-                                requestBody.ToString(SaveOptions.DisableFormatting),
-                                "application/xml");
-                        }
-
-                        var response = request.GetResponse();
-                        using (var stream = response.GetResponseStream())
-                        {
-                            var xmlReader = XmlReader.Create(stream);
-                            xmlReader.MoveToContent();
-
-                            var document = (XElement) XNode.ReadFrom(xmlReader);
-                            return document;
-                        }
-
-                    });
-
-            return task;
         }
 
         private static HttpDeliveryMethods TranslateHttpMethod(HttpMethod httpMethod)
